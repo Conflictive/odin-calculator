@@ -10,6 +10,7 @@
     width: 375px;
     height: 150px;
     font-size: 30px;
+    border: 1px solid black;
 }
 
 .row {
@@ -21,4 +22,9 @@
 .calc-button {
     width: 75px;
     aspect-ratio: 1/1;
+}
+
+#clear-button {
+    width: 375px;
+    height: 75px;
 }
