@@ -15,14 +15,14 @@ const operatorMap = {
     "/": "divide"
 };
 
-const updateDisplay = () => display.textContent = equation;
-
 const calculator = {
     add: (a, b) => a + b,
     subtract: (a, b) => a - b,
     multiply: (a, b) => a * b,
     divide: (a, b) => a / b
 };
+
+const updateDisplay = () => display.textContent = equation;
 
 const operate = (operator, firstNum, secondNum) => calculator[operatorMap[operator]](firstNum, secondNum);
 
@@ -39,13 +39,13 @@ calcBtns.forEach((button) => {
             equation = "";
             updateDisplay();
         }); 
-      } else {
+      } else { // Delete button functionality
             button.addEventListener("click", () => {
                 equation = equation.slice(0,-1);
                 updateDisplay();
             });
         }
-    });
+});
 
 
 
