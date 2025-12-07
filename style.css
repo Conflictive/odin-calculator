@@ -25,17 +25,15 @@ body {
     justify-content: center;
 }
 
-.calc-button {
+.equals-btn,
+.operand-btn,
+.number-btn{
     width: 75px;
     aspect-ratio: 1/1;
 }
 
-.calc-button.top {
+.top {
     width: 150px;
     height: 75px;
 }
 
-#clear-button {
-    width: 375px;
-    height: 75px;
-}
