@@ -22,7 +22,6 @@ const delBtn = document.querySelector(".del-btn");
 
 // --- LOGIC ---
 function processNumber(number) {
-
     if (displayReset || display === "0") {
         display = "";
         displayReset = false;
@@ -34,7 +33,6 @@ function processNumber(number) {
 }
 
 function processOperator(operator) {
-
     if (displayReset == true) {
         operation = operator;
         return;
@@ -71,7 +69,6 @@ function resetCalculator() {
 }
 
 function deleteNumber() {
-
     if (!displayReset) {
         display = display.slice(0,-1);
     }
