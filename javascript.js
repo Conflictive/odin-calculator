@@ -9,7 +9,7 @@ const calculator = {
 // --- VARIABLES ---
 let firstOperand = "";
 let operation = "";
-let displayReset = false; // Display needs to be reset when an operand is pressed
+let displayReset = false; // Flag to determine when display should be reset (after an operation is pressed)
 let display = "0";
 
 // --- DOM ELEMENTS ---
@@ -58,15 +58,11 @@ function evaluate() {
 
 // --- EVENT LISTERNERS ---
 numberBtns.forEach((numberBtn) => {
-    numberBtn.addEventListener("click", () => {
-        processNumber(numberBtn.textContent);
-    });
+    numberBtn.addEventListener("click", () => processNumber(numberBtn.textContent));
 });
 
 operationBtns.forEach((operationBtn) => {
-    operationBtn.addEventListener("click", () => {
-        processOperator(operationBtn.textContent);
-    })
+    operationBtn.addEventListener("click", () => processOperator(operationBtn.textContent));
 })
 
 equalsBtn.addEventListener("click", () => evaluate());
