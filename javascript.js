@@ -16,7 +16,7 @@ let display = "0";
 const displayNumber = document.querySelector("#display-number");
 const numberBtns = document.querySelectorAll(".number-btn");
 const operationBtns = document.querySelectorAll(".operand-btn");
-const equalsBtn = document.querySelectorAll(".equals-btn");
+const equalsBtn = document.querySelector(".equals-btn");
 const clearBtn = document.querySelector(".clear-btn");
 const delBtn = document.querySelector(".del-btn");
 
@@ -33,20 +33,27 @@ function processNumber(number) {
 
 function processOperator(operator) {
 
+    if (displayReset == true) {
+        operation = operator;
+        return;
+    }
+
     if (firstOperand === "") {
         firstOperand = displayNumber.textContent;
         operation = operator
         displayReset = true;
-    } else {
-        evaluate();
-        operation = operator
-        displayReset = true;
-        firstOperand = displayNumber.textContent;
-    }
+        return;
+    } 
+
+    evaluate();   
+    operation = operator
+    
 }
 
 function evaluate() {
     displayNumber.textContent = calculator[operation](Number(firstOperand), Number(displayNumber.textContent));   
+    firstOperand = displayNumber.textContent;
+    displayReset = true;
 }
 
 // --- EVENT LISTERNERS ---
@@ -61,3 +68,5 @@ operationBtns.forEach((operationBtn) => {
         processOperator(operationBtn.textContent);
     })
 })
+
+equalsBtn.addEventListener("click", () => evaluate());
