@@ -23,12 +23,14 @@ const delBtn = document.querySelector(".del-btn");
 // --- LOGIC ---
 function processNumber(number) {
 
-    if (displayReset) {
-        displayNumber.textContent = "";
+    if (displayReset || display === "0") {
+        display = "";
         displayReset = false;
     }
 
-    displayNumber.textContent += number;
+    display += number;
+    displayNumber.textContent = display;
+
 }
 
 function processOperator(operator) {
@@ -51,9 +53,34 @@ function processOperator(operator) {
 }
 
 function evaluate() {
-    displayNumber.textContent = calculator[operation](Number(firstOperand), Number(displayNumber.textContent));   
+    display = calculator[operation](Number(firstOperand), Number(display));   
+    displayNumber.textContent = display;
+
     firstOperand = displayNumber.textContent;
     displayReset = true;
+}
+
+function resetCalculator() {
+    // Change variables back to their initial values
+    firstOperand = "";
+    operation = "";
+    displayReset = false;
+    display = "0";
+
+    displayNumber.textContent = display;
+}
+
+function deleteNumber() {
+
+    if (!displayReset) {
+        display = display.slice(0,-1);
+    }
+
+    if (display === "") {
+        display = "0";
+    }
+
+    displayNumber.textContent = display;
 }
 
 // --- EVENT LISTERNERS ---
@@ -66,3 +93,7 @@ operationBtns.forEach((operationBtn) => {
 })
 
 equalsBtn.addEventListener("click", () => evaluate());
+
+clearBtn.addEventListener("click", () => resetCalculator());
+
+delBtn.addEventListener("click", () => deleteNumber())
