@@ -1,3 +1,11 @@
+// --- CONSTANTS ---
+const calculator = {
+    "+": (a, b) => a + b,
+    "-": (a, b) => a - b,
+    "X": (a, b) => a * b,
+    "/": (a, b) => b === 0 ? "Cannot divide by zero" : a / b
+};
+
 // --- DOM ELEMENTS ---
 const numberBtns = document.querySelectorAll(".number-btn");
 const operandBtns = document.querySelectorAll(".operand-btn");
