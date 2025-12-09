@@ -2,9 +2,17 @@
 const calculator = {
     "+": (a, b) => a + b,
     "-": (a, b) => a - b,
-    "X": (a, b) => a * b,
+    "×": (a, b) => a * b,
+    "*": (a, b) => a * b, // Keyboard support
     "/": (a, b) => b === 0 ? "DivisionError" : a / b
 };
+
+// For keyboard support
+const ALLOWED_KEYS = [
+    "1", "2" , "3", "4", "5", "6", "7", "8", "9", "0", ".", // Numbers
+    "+", "-", "*", "/", "=", "Enter", // Operations
+    "Backspace", "Delete", "Escape", // Controls
+]
 
 const MAX_NUMS = 10;
 
@@ -48,19 +56,22 @@ function processOperator(operator) {
 
     // Handles the case when the user attempts a second equation before pressing equals (1 + 2 + 3) 
     if (firstOperand === "") {
-        firstOperand = displayNumber.textContent;
+        firstOperand = display;
         operation = operator
         displayReset = true;
         return;
     } 
 
+    updateDisplay();
     evaluate();   
     operation = operator
 }
 
 function evaluate() {
     // Prevent evaluations if no operator has been selected
-    if (operation === "") return;
+    if (operation === "") {
+        return;
+    }
 
     let result = calculator[operation](Number(firstOperand), Number(display));   
     
@@ -113,7 +124,9 @@ function processDecimal() {
     }
 
     // Prevent numbers with multiple decimal points
-    if (display.includes("."))  return;
+    if (display.includes(".")) {
+        return;
+    }  
 
     display += "."
     updateDisplay();
@@ -132,9 +145,27 @@ function updateDisplay() {
         displayNumber.style.fontSize = "30px"; 
     }
 
-    displayNumber.textContent = display
+    displayNumber.textContent = display;
 }
-    
+
+function handleKeyPress(key) {
+    console.log(key)
+    if (key >= "0" && key <= "9") {
+        processNumber(key);
+    } else if (key === ".") {
+        processDecimal();
+    } else if (key === "Backspace" || key === "Delete") {
+        deleteNumber();
+    } else if (key === "=" || key === "Enter") {
+        evaluate();
+    } else if (key === "Escape") {
+        resetCalculator();
+        updateDisplay();
+    } else {
+        processOperator(key);
+    }
+}
+            
 // --- EVENT LISTERNERS ---
 numberBtns.forEach((numberBtn) => {
     numberBtn.addEventListener("click", () => processNumber(numberBtn.textContent));
@@ -154,3 +185,14 @@ clearBtn.addEventListener("click", () => {
 delBtn.addEventListener("click", () => deleteNumber());
     
 dotBtn.addEventListener("click", () => processDecimal())
+
+document.addEventListener("keydown", (e) => {
+    const key = e.key;
+
+    // Prevent unsupported keys from being used
+    if (!ALLOWED_KEYS.includes(key)) {
+        return;
+    }
+
+    handleKeyPress(key);
+})
