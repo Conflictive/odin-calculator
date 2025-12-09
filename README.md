@@ -11,5 +11,5 @@ A fully functional calculator built for **The Odin Project** foundations curricu
 
 ## Tech Stack
 * JavaScript (ES6+)
-* CSS3 (Grid/Flexbox)
+* CSS3 
 * HTML5
