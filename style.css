@@ -22,6 +22,10 @@ body {
     background-color: #323232;
 }
 
+#display-number {
+    padding-left: 2px;
+}
+
 .row {
     display: flex;
     align-items: center;
@@ -61,8 +65,3 @@ body {
     height: 75px;
     color: white;
 }
-
-#display-number {
-    padding-left: 2px;
-}
-

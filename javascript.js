@@ -3,8 +3,10 @@ const calculator = {
     "+": (a, b) => a + b,
     "-": (a, b) => a - b,
     "X": (a, b) => a * b,
-    "/": (a, b) => b === 0 ? "Cannot divide by zero" : a / b
+    "/": (a, b) => b === 0 ? "DivisionError" : a / b
 };
+
+const MAX_NUMS = 10;
 
 // --- VARIABLES ---
 let firstOperand = "";
@@ -28,19 +30,23 @@ function processNumber(number) {
         displayReset = false;
     }
 
+    // Prevent numbers larger than 10 digits
+    if (display.length > MAX_NUMS) {
+        return;
+    }
+
     display += number;
     updateDisplay();
-
 }
 
 function processOperator(operator) {
-
     // If the last thing pressed is an operator change the operation to the new operator
     if (displayReset == true) {
         operation = operator;
         return;
     }
 
+    // Handles the case when the user attempts a second equation before pressing equals (1 + 2 + 3) 
     if (firstOperand === "") {
         firstOperand = displayNumber.textContent;
         operation = operator
@@ -50,14 +56,28 @@ function processOperator(operator) {
 
     evaluate();   
     operation = operator
-    
 }
 
 function evaluate() {
-    display = calculator[operation](Number(firstOperand), Number(display));   
-    displayNumber.textContent = roundNumber(display);
+    // Prevent evaluations if no operator has been selected
+    if (operation === "") return;
 
-    firstOperand = displayNumber.textContent; // Make the answer of the equation the first number in the next equation
+    let result = calculator[operation](Number(firstOperand), Number(display));   
+    
+    // To prevent the calculator blowing up when someone tries to divide by 0
+    if (result === "DivisionError") {
+        display = "Cannot divide by zero";
+        updateDisplay();
+        resetCalculator()
+        return;
+    }
+
+    display = roundNumber(result);
+
+    updateDisplay()
+
+    operation = "";
+    firstOperand = display; // Make the answer of the equation the first number in the next equation
     displayReset = true;
 }
 
@@ -67,15 +87,15 @@ function resetCalculator() {
     operation = "";
     displayReset = false;
     display = "0";
-
-    updateDisplay();
 }
 
 function deleteNumber() {
+    // Remove last number
     if (!displayReset) {
         display = display.slice(0,-1);
     }
 
+    // Revert to initial display if every number is deleted
     if (display === "") {
         display = "0";
     }
@@ -84,20 +104,36 @@ function deleteNumber() {
 }
 
 function processDecimal() {
-    if (display.includes(".")) {
+    // Edge case to handle when a decimal is pressed after an equation is completed
+    if (displayReset) {
+        display = "0.";
+        displayReset = false;
+        updateDisplay();
         return;
     }
+
+    // Prevent numbers with multiple decimal points
+    if (display.includes("."))  return;
 
     display += "."
     updateDisplay();
 }
 
+// Convert to string with 3 decimals, then convert back to Number
 function roundNumber(num) {
-    // Convert to string with 2 decimals, then convert back to Number
     return Number(num.toFixed(3));
 }
 
-const updateDisplay = () => displayNumber.textContent = display;
+function updateDisplay() {
+    // Prevent large numbers from going off the screen of the calculator
+    if (display.toString().length > 15) {
+        displayNumber.style.fontSize = "24px"; 
+    } else {
+        displayNumber.style.fontSize = "30px"; 
+    }
+
+    displayNumber.textContent = display
+}
     
 // --- EVENT LISTERNERS ---
 numberBtns.forEach((numberBtn) => {
@@ -110,8 +146,11 @@ operationBtns.forEach((operationBtn) => {
 
 equalsBtn.addEventListener("click", () => evaluate());
 
-clearBtn.addEventListener("click", () => resetCalculator());
+clearBtn.addEventListener("click", () => {
+    resetCalculator();
+    updateDisplay();
+});
 
-delBtn.addEventListener("click", () => deleteNumber())
-
+delBtn.addEventListener("click", () => deleteNumber());
+    
 dotBtn.addEventListener("click", () => processDecimal())
