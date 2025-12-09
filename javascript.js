@@ -19,6 +19,7 @@ const operationBtns = document.querySelectorAll(".operand-btn");
 const equalsBtn = document.querySelector(".equals-btn");
 const clearBtn = document.querySelector(".clear-btn");
 const delBtn = document.querySelector(".del-btn");
+const dotBtn = document.querySelector(".dot-btn");
 
 // --- LOGIC ---
 function processNumber(number) {
@@ -28,11 +29,13 @@ function processNumber(number) {
     }
 
     display += number;
-    displayNumber.textContent = display;
+    updateDisplay();
 
 }
 
 function processOperator(operator) {
+
+    // If the last thing pressed is an operator change the operation to the new operator
     if (displayReset == true) {
         operation = operator;
         return;
@@ -52,9 +55,9 @@ function processOperator(operator) {
 
 function evaluate() {
     display = calculator[operation](Number(firstOperand), Number(display));   
-    displayNumber.textContent = display;
+    displayNumber.textContent = roundNumber(display);
 
-    firstOperand = displayNumber.textContent;
+    firstOperand = displayNumber.textContent; // Make the answer of the equation the first number in the next equation
     displayReset = true;
 }
 
@@ -65,7 +68,7 @@ function resetCalculator() {
     displayReset = false;
     display = "0";
 
-    displayNumber.textContent = display;
+    updateDisplay();
 }
 
 function deleteNumber() {
@@ -77,9 +80,25 @@ function deleteNumber() {
         display = "0";
     }
 
-    displayNumber.textContent = display;
+    updateDisplay();
 }
 
+function processDecimal() {
+    if (display.includes(".")) {
+        return;
+    }
+
+    display += "."
+    updateDisplay();
+}
+
+function roundNumber(num) {
+    // Convert to string with 2 decimals, then convert back to Number
+    return Number(num.toFixed(3));
+}
+
+const updateDisplay = () => displayNumber.textContent = display;
+    
 // --- EVENT LISTERNERS ---
 numberBtns.forEach((numberBtn) => {
     numberBtn.addEventListener("click", () => processNumber(numberBtn.textContent));
@@ -94,3 +113,5 @@ equalsBtn.addEventListener("click", () => evaluate());
 clearBtn.addEventListener("click", () => resetCalculator());
 
 delBtn.addEventListener("click", () => deleteNumber())
+
+dotBtn.addEventListener("click", () => processDecimal())

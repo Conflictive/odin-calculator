@@ -25,6 +25,7 @@ body {
     justify-content: center;
 }
 
+.dot-btn,
 .equals-btn,
 .operand-btn,
 .number-btn{
